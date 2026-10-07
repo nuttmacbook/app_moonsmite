@@ -53,7 +53,7 @@ const header = (data) => {
             <!-- Brand -->
             <a href="#" onclick="switchTab('mint'); return false;" class="flex shrink-0 items-center gap-2 rounded-lg ${FOCUS}">
                 <img src="https://www.moonworld.app/logo.png" alt="" width="32" height="32" class="h-8 w-8 rounded-full object-contain drop-shadow-[0_0_8px_rgba(252,211,77,0.6)]">
-                <span class="bg-gradient-to-b from-amber-100 via-amber-300 to-amber-600 bg-clip-text font-display text-[15px] font-bold uppercase tracking-[0.18em] text-transparent drop-shadow-[0_1px_0_rgba(120,53,15,0.8)]">Moon Smite</span>
+                <span class="bg-gradient-to-b from-amber-100 via-amber-300 to-amber-600 bg-clip-text font-display text-[15px] font-bold uppercase tracking-[0.18em] text-transparent drop-shadow-[0_1px_0_rgba(120,53,15,0.8)]">Moon Smith</span>
             </a>
 
             <!-- Tabs: desktop only, phones use the bottom bar -->

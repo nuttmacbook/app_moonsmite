@@ -1,0 +1,345 @@
+@import "tailwindcss";
+
+@theme {
+    --font-display: "Orbitron", "Chakra Petch", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+    color-scheme: dark;
+}
+
+/* Deep space over the lunar orbit: fixed stars plus nebula light. Static on purpose */
+/* Night sky from the MoonWorld banner: indigo, a pink-violet nebula, a green aurora, fixed stars */
+body {
+    background-color: #0b0f2e;
+    background-image:
+        radial-gradient(1px 1px at 12% 18%, rgba(255, 255, 255, 0.8), transparent 60%),
+        radial-gradient(1px 1px at 72% 34%, rgba(255, 255, 255, 0.6), transparent 60%),
+        radial-gradient(1.5px 1.5px at 38% 72%, rgba(254, 240, 138, 0.7), transparent 60%),
+        radial-gradient(1px 1px at 88% 82%, rgba(255, 255, 255, 0.55), transparent 60%),
+        radial-gradient(1px 1px at 56% 8%, rgba(221, 214, 254, 0.7), transparent 60%),
+        radial-gradient(1px 1px at 22% 52%, rgba(255, 255, 255, 0.45), transparent 60%),
+        radial-gradient(42rem 26rem at 8% 10%, rgba(192, 132, 252, 0.28), transparent 70%),
+        radial-gradient(30rem 18rem at 20% 28%, rgba(244, 114, 182, 0.16), transparent 70%),
+        radial-gradient(36rem 14rem at 95% 22%, rgba(52, 211, 153, 0.16), transparent 70%),
+        radial-gradient(40rem 30rem at 50% 115%, rgba(99, 102, 241, 0.25), transparent 70%),
+        linear-gradient(180deg, #121a4a 0%, #0b0f2e 45%, #120b2e 100%);
+    background-size: 240px 240px, 310px 310px, 420px 420px, 280px 280px, 360px 360px, 200px 200px, auto, auto, auto, auto, auto;
+    background-attachment: fixed;
+}
+
+/* Background art: bg_horizontal.png on wide screens, bg_verticle.png on phones held upright.
+   A fixed layer (not background-attachment: fixed) so it also stays put on iOS. */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    background: url("/bg_horizontal.png") center / cover no-repeat;
+}
+
+@media (orientation: portrait) {
+    body::before {
+        background-image: url("/bg_verticle.png");
+    }
+}
+
+/* Darkens the art so text and panels stay readable on top of it */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse at 50% 30%, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.75) 70%),
+        linear-gradient(180deg, rgba(11, 15, 46, 0.25), rgba(11, 15, 46, 0.4));
+}
+
+/* ------------------------------------------------------------ ambient embers */
+
+/* Slow blue embers drifting up over the whole app, like the furnace's sparks but cool */
+.ambient {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.ambient span {
+    position: absolute;
+    bottom: -10px;
+    width: var(--s, 3px);
+    height: var(--s, 3px);
+    border-radius: 9999px;
+    background: #93c5fd;
+    box-shadow: 0 0 8px 2px rgba(59, 130, 246, 0.85);
+    opacity: 0;
+    animation: drift var(--d, 12s) linear var(--delay, 0s) infinite;
+}
+
+@keyframes drift {
+    0%   { opacity: 0; transform: translate(0, 0); }
+    10%  { opacity: 0.9; }
+    80%  { opacity: 0.6; }
+    100% { opacity: 0; transform: translate(var(--x, 20px), -105vh); }
+}
+
+/* ------------------------------------------------------------ glass HUD panel */
+
+.hud {
+    --cut: 14px;
+    --edge: 252, 211, 77;
+    position: relative;
+    isolation: isolate;
+    /* Fine HUD grid over the glass, for depth */
+    --grid: rgba(165, 180, 252, 0.03);
+    background:
+        linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 16px 16px,
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 16px 16px,
+        linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0) 34%),
+        linear-gradient(160deg, rgba(49, 46, 129, 0.45), rgba(15, 18, 56, 0.62));
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    backdrop-filter: blur(14px) saturate(160%);
+    clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+    /* Glowing hairline plus a soft inner glow; outer shadows would be cut off by clip-path */
+    box-shadow:
+        inset 0 0 0 1px rgba(var(--edge), 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        inset 0 0 26px rgba(99, 102, 241, 0.18);
+}
+
+/* Lit chamfer edges and corner ticks: the digital trim */
+.hud::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        linear-gradient(135deg, transparent 23%, rgba(var(--edge), 1) 25%, transparent 27%) top left / calc(var(--cut) * 2) calc(var(--cut) * 2) no-repeat,
+        linear-gradient(315deg, transparent 23%, rgba(var(--edge), 1) 25%, transparent 27%) bottom right / calc(var(--cut) * 2) calc(var(--cut) * 2) no-repeat,
+        linear-gradient(rgba(var(--edge), 0.9), rgba(var(--edge), 0.9)) top right / 22px 2px no-repeat,
+        linear-gradient(rgba(var(--edge), 0.9), rgba(var(--edge), 0.9)) top right / 2px 22px no-repeat,
+        linear-gradient(rgba(var(--edge), 0.9), rgba(var(--edge), 0.9)) bottom left / 22px 2px no-repeat,
+        linear-gradient(rgba(var(--edge), 0.9), rgba(var(--edge), 0.9)) bottom left / 2px 22px no-repeat;
+    filter: drop-shadow(0 0 4px rgba(var(--edge), 0.9));
+}
+
+.hud-plasma {
+    --edge: 240, 171, 252;
+    --grid: rgba(240, 171, 252, 0.03);
+    background:
+        linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 16px 16px,
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 16px 16px,
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0) 34%),
+        linear-gradient(160deg, rgba(126, 34, 206, 0.42), rgba(30, 10, 60, 0.62));
+}
+
+.cut {
+    clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+}
+
+/* ---------------------------------------------------------------- furnaces */
+
+.reactor {
+    background: conic-gradient(from 0deg, #fcd34d, #f0abfc, #67e8f9, #fcd34d);
+    mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+    animation: reactor-spin 6s linear infinite;
+}
+
+@keyframes reactor-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* --------------------------------------------------------------- minigames */
+
+.stage {
+    background:
+        linear-gradient(rgba(165, 180, 252, 0.03) 1px, transparent 1px) 0 0 / 20px 20px,
+        linear-gradient(90deg, rgba(165, 180, 252, 0.03) 1px, transparent 1px) 0 0 / 20px 20px,
+        radial-gradient(ellipse at 50% 60%, rgba(124, 58, 237, 0.22), transparent 65%),
+        linear-gradient(180deg, rgba(8, 12, 32, 0.7), rgba(3, 4, 12, 0.85));
+    box-shadow: inset 0 0 0 1px rgba(103, 232, 249, 0.25), inset 0 0 30px rgba(34, 211, 238, 0.1);
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+
+.spark {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    margin: -2px 0 0 -2px;
+    border-radius: 9999px;
+    pointer-events: none;
+    box-shadow: 0 0 8px currentColor;
+    animation: spark-fly 0.55s ease-out forwards;
+}
+
+@keyframes spark-fly {
+    to { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; }
+}
+
+.callout {
+    position: absolute;
+    left: 50%;
+    top: 18%;
+    pointer-events: none;
+    text-shadow: 0 0 12px rgba(103, 232, 249, 0.9);
+    animation: callout-rise 0.7s ease-out forwards;
+}
+
+@keyframes callout-rise {
+    from { transform: translate(-50%, 6px); opacity: 0; }
+    20% { opacity: 1; }
+    to { transform: translate(-50%, -14px); opacity: 0; }
+}
+
+.rune {
+    transition: background-color 0.12s, box-shadow 0.12s, color 0.12s;
+}
+
+.rune-lit {
+    background-color: rgba(34, 211, 238, 0.35);
+    color: #ecfeff;
+    box-shadow: inset 0 0 0 1px rgba(165, 243, 252, 0.9), inset 0 0 22px rgba(103, 232, 249, 0.8);
+}
+
+.rune-wrong {
+    background-color: rgba(244, 63, 94, 0.35);
+}
+
+.crack {
+    background: linear-gradient(180deg, #ecfeff, #e879f9 60%, #7c3aed);
+    clip-path: polygon(40% 0, 70% 30%, 45% 50%, 80% 100%, 30% 60%, 55% 40%, 20% 10%);
+    box-shadow: 0 0 14px #f0abfc;
+    animation: crack-cool var(--life, 1.2s) linear forwards;
+}
+
+@keyframes crack-cool {
+    from { filter: brightness(1.6) drop-shadow(0 0 6px #f0abfc); }
+    to { filter: brightness(0.4); }
+}
+
+/* ------------------------------------------------------- burning furnace */
+
+/* A furnace that is heating: red-orange firelight flickers up from the bottom of the panel */
+.burning {
+    --edge: 251, 146, 60;
+    --grid: rgba(251, 146, 60, 0.04);
+    background:
+        linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 16px 16px,
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 16px 16px,
+        linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0) 34%),
+        linear-gradient(160deg, rgba(127, 29, 29, 0.5), rgba(30, 10, 40, 0.7));
+}
+
+.burning::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(ellipse 70% 90% at 22% 115%, rgba(239, 68, 68, 0.75), rgba(249, 115, 22, 0.35) 40%, transparent 72%);
+    animation: firelight 1.3s ease-in-out infinite alternate;
+}
+
+@keyframes firelight {
+    0%   { opacity: 0.55; transform: scaleY(0.92); }
+    35%  { opacity: 0.9;  transform: scaleY(1.04); }
+    60%  { opacity: 0.65; transform: scaleY(0.97); }
+    100% { opacity: 1;    transform: scaleY(1.08); }
+}
+
+/* Inside of the ring glows like a hot coal */
+.burning .reactor-core {
+    background: radial-gradient(circle, rgba(254, 215, 170, 0.9), rgba(239, 68, 68, 0.55) 45%, rgba(127, 29, 29, 0.2) 70%, transparent 75%);
+    animation: coal 0.9s ease-in-out infinite alternate;
+}
+
+@keyframes coal {
+    from { opacity: 0.65; transform: scale(0.94); }
+    to   { opacity: 1;    transform: scale(1.04); }
+}
+
+.burning .reactor {
+    background: conic-gradient(from 0deg, #f97316, #ef4444, #fbbf24, #f97316);
+    animation-duration: 3s;
+}
+
+/* The weapon itself shimmers with heat */
+.burning .heat-img {
+    animation: shimmer 0.7s ease-in-out infinite alternate;
+}
+
+@keyframes shimmer {
+    from { filter: drop-shadow(0 0 6px rgba(249, 115, 22, 0.9)) brightness(1.05); }
+    to   { filter: drop-shadow(0 0 14px rgba(239, 68, 68, 1)) brightness(1.3) saturate(1.3); }
+}
+
+/* Embers drifting up out of the furnace */
+.ember {
+    position: absolute;
+    bottom: 6px;
+    width: 3px;
+    height: 3px;
+    border-radius: 9999px;
+    background: #fdba74;
+    box-shadow: 0 0 6px 2px rgba(249, 115, 22, 0.9);
+    pointer-events: none;
+    opacity: 0;
+    animation: ember-rise 1.2s ease-out infinite;
+}
+
+@keyframes ember-rise {
+    0%   { opacity: 0; transform: translate(0, 0) scale(1); }
+    15%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(var(--drift, 6px), -58px) scale(0.3); }
+}
+
+/* Live "heating" dot on weapon cards */
+.hot-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: #ef4444;
+    box-shadow: 0 0 8px 2px rgba(239, 68, 68, 0.8);
+    animation: coal 0.8s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .burning::after, .burning .reactor-core, .burning .heat-img, .hot-dot { animation: none; }
+    .ember, .ambient { display: none; }
+    .reactor { animation: none; }
+    .callout { animation-duration: 0.01s; }
+}
+
+/* Long lists: let the browser skip layout and paint for cards that are off screen */
+.cv-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 320px;
+}
+
+/* Collapsible sections: no default marker, a chevron that turns when open */
+details > summary {
+    list-style: none;
+    cursor: pointer;
+}
+details > summary::-webkit-details-marker {
+    display: none;
+}
+details[open] > summary .chevron {
+    transform: rotate(180deg);
+}
+
+/* Game coin icon next to amounts */
+.coin {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    border-radius: 9999px;
+    object-fit: contain;
+}

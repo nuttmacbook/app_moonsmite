@@ -24,7 +24,7 @@ const askReferrer = ({ initial = "", resolve: lookup }) => new Promise((resolve)
                 <p class="mt-1 text-sm text-slate-400">Your first mint needs the player who invited you. Enter their player ID or paste their invite link. This is saved once and cannot be changed.</p>
                 <label for="ref-input" class="sr-only">Referrer wallet or link</label>
                 <input id="ref-input" data-ref-input type="text" autocomplete="off" spellcheck="false" value="${initial}" placeholder="Player ID, e.g. 42, or invite link"
-                    class="cut mt-4 w-full bg-indigo-950 px-3 py-2.5 font-mono text-sm text-white ring-1 ring-inset ring-amber-200/30 placeholder:text-slate-500 ${FOCUS}">
+                    class="cut mt-4 w-full bg-indigo-950 px-3 py-2.5 font-mono text-sm text-white ring-1 ring-inset ring-amber-200/30 placeholder:text-slate-500 ${FOCUS}" disabled>
                 <p data-ref-error class="mt-2 hidden text-sm text-rose-300" role="alert"></p>
                 <div class="mt-4 flex gap-2">
                     <button type="submit" data-ref-submit class="${BUTTON.primary} flex-1">Continue</button>

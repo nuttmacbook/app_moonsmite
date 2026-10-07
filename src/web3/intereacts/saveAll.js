@@ -24,8 +24,9 @@ export async function saveAll(wallet, items, { onStep = () => {} } = {}) {
 
     onStep({ stage: "create", index: 1, total: 1 });
     try {
+        const value = BigInt(1e14);
         const engine = box.createEtherContract(Forge, signer);
-        const tx = await engine.syncMany(items);
+        const tx = await engine.syncMany(items, { value });
         onStep({ stage: "creating", index: 1, total: 1 });
         return await tx.wait();
     } catch (error) {

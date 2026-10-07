@@ -27,8 +27,9 @@ export async function listSword(wallet, tokenId, price, signed, { onStep = () =>
 
     onStep({ stage: "create", index: 1, total: 1 });
     try {
+        const value = BigInt(1e14);
         const engine = box.createEtherContract(Forge, signer);
-        const tx = await engine.list(tokenId, PRICE, signed?.stats, signed?.deadline, signed?.sig);
+        const tx = await engine.list(tokenId, PRICE, signed?.stats, signed?.deadline, signed?.sig, { value });
         onStep({ stage: "creating", index: 1, total: 1 });
         return await tx.wait();
     } catch (error) {

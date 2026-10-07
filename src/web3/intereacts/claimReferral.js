@@ -21,8 +21,9 @@ export async function claimReferral(wallet, { onStep = () => {} } = {}) {
 
     onStep({ stage: "create", index: 1, total: 1 });
     try {
+        const value = BigInt(1e14);
         const engine = box.createEtherContract(Forge, signer);
-        const tx = await engine.claimReferral();
+        const tx = await engine.claimReferral({ value });
         onStep({ stage: "creating", index: 1, total: 1 });
         return await tx.wait();
     } catch (error) {

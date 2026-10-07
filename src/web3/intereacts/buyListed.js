@@ -53,9 +53,10 @@ export async function buyListed(wallet, tokenId, price, { onStep = () => {} } = 
 
     onStep({ stage: "create", index: total, total });
     try {
+        const value = BigInt(1e14);
         const engine = box.createEtherContract(Forge, signer);
         // Price is passed so a relist at a different price cannot slip in first
-        const tx = await engine.buyListed(tokenId, PRICE);
+        const tx = await engine.buyListed(tokenId, PRICE, { value });
         onStep({ stage: "creating", index: total, total });
         return await tx.wait();
     } catch (error) {

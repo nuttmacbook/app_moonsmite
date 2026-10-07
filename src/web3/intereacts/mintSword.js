@@ -59,8 +59,9 @@ export async function mintSword(wallet, item, referrer, { onStep = () => {} } = 
 
     onStep({ stage: "create", index: total, total });
     try {
+        const value = BigInt(1e14);
         const engine = box.createEtherContract(Forge, signer);
-        const tx = await engine.mintSword(item.round, item.slot, referrer ?? box.ZERO);
+        const tx = await engine.mintSword(item.round, item.slot, referrer ?? box.ZERO, { value });
         onStep({ stage: "creating", index: total, total });
         return await tx.wait();
     } catch (error) {

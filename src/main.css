@@ -8,6 +8,21 @@
     color-scheme: dark;
 }
 
+/* No double-tap zoom: taps fire immediately, scrolling still works */
+html,
+body {
+    touch-action: manipulation;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+/* iOS zooms in when a field under 16px gets focus */
+input,
+select,
+textarea {
+    font-size: max(16px, 1em) !important;
+}
+
 /* Deep space over the lunar orbit: fixed stars plus nebula light. Static on purpose */
 /* Night sky from the MoonWorld banner: indigo, a pink-violet nebula, a green aurora, fixed stars */
 body {
@@ -53,8 +68,8 @@ body::after {
     z-index: -1;
     pointer-events: none;
     background:
-        radial-gradient(ellipse at 50% 30%, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.75) 70%),
-        linear-gradient(180deg, rgba(11, 15, 46, 0.25), rgba(11, 15, 46, 0.4));
+        radial-gradient(ellipse at 50% 30%, rgba(11, 15, 46, 0.35), rgba(11, 15, 46, 0.75) 70%),
+        linear-gradient(180deg, rgba(11, 15, 46, 0.55), rgba(11, 15, 46, 0.8));
 }
 
 /* ------------------------------------------------------------ ambient embers */
